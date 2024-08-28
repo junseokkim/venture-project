@@ -1,0 +1,33 @@
+version: "3" # 버전 지정
+
+services: # 컨테이너 설정
+  backend:
+    container_name: networking
+    image: kimjunseok/networking
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+      - redis
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: networking
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

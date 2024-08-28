@@ -6,6 +6,7 @@ import com.venture.networking.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.venture.networking.config.security.jwt.JwtAuthenticationFilter;
 import com.venture.networking.config.security.jwt.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,6 +29,12 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtExceptionFilter jwtExceptionFilter;
+
+    @Value("${server.url}")
+    private String serverUrl;
+
+    @Value("${server.port}")
+    private String serverPort;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -61,8 +68,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:8080");
-        // TODO: Change this to your EC2 domain
-        // configuration.addAllowedOrigin("http://your-ec2-domain.com");
+        configuration.addAllowedOrigin("http://" + serverUrl + ":" + serverPort);
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
