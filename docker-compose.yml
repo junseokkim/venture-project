@@ -24,8 +24,6 @@ services: # 컨테이너 설정
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: networking
-      MYSQL_USER: root
-      MYSQL_PASSWORD: 1234
     volumes:
       - mysql_data:/var/lib/mysql
 
