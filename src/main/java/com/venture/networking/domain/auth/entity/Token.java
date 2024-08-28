@@ -12,7 +12,6 @@ import org.springframework.data.redis.core.RedisHash;
 @ToString
 public class Token {
     @Id
-    private String memberId;
+    private String id;
     private String refreshToken;
-
 }

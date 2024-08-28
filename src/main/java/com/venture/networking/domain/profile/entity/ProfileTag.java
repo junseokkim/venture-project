@@ -1,8 +1,5 @@
-package com.venture.networking.domain.networking.entity;
+package com.venture.networking.domain.profile.entity;
 
-import com.venture.networking.domain.member.entity.Member;
-import com.venture.networking.global.common.entity.BaseEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,20 +17,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Networking extends BaseEntity {
+public class ProfileTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
-    private String description;
-    private String representativeImg;
-    private String relatedLink;
-    private String inviteCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private Member organizer;
+    private Profile profile;
 }

@@ -30,7 +30,7 @@ public class PrincipalDetailsService implements UserDetailsService {
         Member memberEntity = memberRepository.findByEmail(email)
             .orElseThrow(MemberNotFoundException::new);
 
-        Profile profile = profileRepository.findByIdAndMemberId(profileId, memberEntity.getId())
+        Profile profile = profileRepository.findByIdAndMember(profileId, memberEntity)
             .orElseThrow(ProfileNotFoundException::new);
 
         return new PrincipalDetails(memberEntity, profile.getId());

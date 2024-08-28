@@ -45,9 +45,15 @@ public class JwtTokenProvider {
     }
 
     public AuthTokenIssueResponse issueToken(String email, Long profileId) {
+        // 기존 토큰 삭제
+        if (tokenRepository.existsById(email)) {
+            tokenRepository.deleteById(email);
+        }
+
         String accessToken = generateToken(email, profileId, ACCESS_TOKEN_EXPIRE_TIME);
         String refreshToken = generateToken(email, profileId, REFRESH_TOKEN_EXPIRE_TIME);
         tokenRepository.save(new Token(email, refreshToken));
+        System.out.printf("accessToken = %s, refreshToken = %s\n", accessToken, refreshToken);
         return new AuthTokenIssueResponse(accessToken, refreshToken);
     }
 

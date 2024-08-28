@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -24,8 +25,11 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        System.out.println("oAuth2User = " + oAuth2User);
-        String email = oAuth2User.getAttribute("email");
+
+        Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+        String email = (String) kakaoAccount.get("email");
+
+        System.out.println("Extracted Email: " + email);
 
         AuthTokenIssueResponse authTokenIssueResponse = jwtTokenProvider.issueToken(email, null);
 

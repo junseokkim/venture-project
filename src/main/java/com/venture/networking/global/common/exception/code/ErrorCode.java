@@ -17,6 +17,12 @@ public enum ErrorCode {
 
     // Profile
     PROFILE_NOT_FOUND("프로필을 찾을 수 없습니다"),
+    PROFILE_NOT_SELECTED("프로필을 선택해주세요"),
+
+    // Networking
+    NETWORKING_NOT_FOUND("네트워킹을 찾을 수 없습니다"),
+    NETWORKING_INVITE_CODE_NOT_FOUND("네트워킹 초대코드를 찾을 수 없습니다"),
+    NETWORKING_PROFILE_FIELD_NOT_FOUND("네트워킹 프로필 필드를 찾을 수 없습니다"),
 
     // S3
     S3_UPLOAD_FAIL("S3 업로드에 실패하였습니다"),

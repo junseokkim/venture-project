@@ -1,10 +1,13 @@
-package com.venture.networking.global.common.s3;
+package com.venture.networking.domain.image.service;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.venture.networking.domain.image.dto.response.ImageInquiryResponse;
+import com.venture.networking.domain.image.dto.response.ImageUploadResponse;
+import com.venture.networking.domain.image.entity.ImageCategory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,26 +23,31 @@ import java.util.Date;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class S3ImageService {
+public class ImageService {
 
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadFile(MultipartFile file) {
+    // 1시간
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60;
+
+    public ImageUploadResponse uploadFile(MultipartFile file, ImageCategory type) {
         File fileObj = convertMultiPartFileToFile(file);
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        String fileName = type + "/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, fileObj));
         fileObj.delete();
-        return fileName;
+        return ImageUploadResponse.from(fileName);
     }
 
-    public String generatePreSignedUrl(String objectKey, long expirationTime) {
+    public ImageInquiryResponse generatePreSignedUrl(String objectKey, ImageCategory type) {
         Date expiration = new Date();
         long expTimeMillis = expiration.getTime();
-        expTimeMillis += expirationTime;
+        expTimeMillis += EXPIRATION_TIME;
         expiration.setTime(expTimeMillis);
+
+        // TODO: S3 버킷에 파일이 존재하지 않을 경우 예외 처리
 
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
             new GeneratePresignedUrlRequest(bucket, objectKey)
@@ -47,10 +55,12 @@ public class S3ImageService {
                 .withExpiration(expiration);
 
         URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-        return url.toString();
+        return ImageInquiryResponse.from(url.toString());
     }
 
-    public void deleteFile(String fileName) {
+    public void deleteFile(String fileName, ImageCategory type) {
+
+        // TODO: S3 버킷에 파일이 존재하지 않을 경우 예외 처리
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
