@@ -21,14 +21,18 @@ jobs:
         run: |
           # create application.yml
           cd ./src/main
+
+          # 디렉토리가 없는 경우 생성
+          mkdir -p ./resources
           cd ./resources
 
           # application.yml 파일 생성하기
           touch ./application.yml
 
           # Secrets에 저장한 값을 application.yml 파일에 쓰기
-          echo "${{ secrets.YML }}" >> ./application.yml
+          echo "${{ secrets.YML }}" > ./application.yml
         shell: bash
+
 
       # 2. Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
