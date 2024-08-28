@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +28,7 @@ public class ImageController {
     @Operation(summary = "이미지 업로드 API", description = "이미지를 업로드하는 API입니다.")
     @PostMapping( value = "/upload", consumes = {"multipart/form-data"})
     public BaseResponse<ImageUploadResponse> uploadFile(
-        @RequestParam("file") MultipartFile file,
+        @RequestPart("file") MultipartFile file,
         @RequestParam("type") ImageCategory type
     ) {
         return BaseResponse.ok(ImageService.uploadFile(file, type));
